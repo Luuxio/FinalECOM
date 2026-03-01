@@ -1,64 +1,63 @@
 import { useState } from "react";
-import { useCategories } from "../hooks/useCategories";
+import { useProducts } from "../hooks/useProducts";
 import "../themes/GalleryPage.css";
 
 export default function Gallery()
 {
-    const { categories, loading, error } = useCategories();
-    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+    const { products, loading, error } = useProducts();
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     if (loading) return <div>Loading...</div>;
-    if (error) return <div>{error}</div>;
+    if (error) return <div>Error: {error}</div>;
+
+    // Fonction pour passer à l'image suivante
+    const nextImage = () =>
+    {
+        setCurrentImageIndex((prevIndex) =>
+            prevIndex === products.length - 1 ? 0 : prevIndex + 1,
+        );
+    };
+
+    // Fonction pour revenir à l'image précédente
+    const prevImage = () =>
+    {
+        setCurrentImageIndex((prevIndex) =>
+            prevIndex === 0 ? products.length - 1 : prevIndex - 1,
+        );
+    };
+
+    // Obtenir le produit et l'image actuels
+    const currentProduct = products[currentImageIndex];
+    const currentImage = currentProduct?.Images?.[0]?.link; // Prend la première image du produit
 
     return (
         <div className="galleryContainer">
-            <div
-                className="galleryHeader"
-                style={{ backgroundImage: "url('../utils/img/waterfall.jpg')" }}
-            >
+            {/* Header */}
+            <div className="galleryHeader">
                 <h1>Gallery</h1>
-                <p>Explore le monde :</p>
-
-                {/* Catégories comme boutons */}
-                <div className="categoryButtons">
-                    {categories.map((category) => (
-                        <button
-                            key={category.id}
-                            className={`categoryButton ${selectedCategory === category.id ? "active" : ""}`}
-                            onClick={() => setSelectedCategory(category.id)}
-                        >
-                            {category.name}
-                        </button>
-                    ))}
-                </div>
+                <p>Découvrez nos produits :</p>
             </div>
 
             {/* Carousel d'images */}
             <div className="imageCarousel">
-                <button className="carouselArrow left" onClick={() => { /* Logique pour image précédente */ }}>
+                <button className="carouselArrow left" onClick={prevImage}>
                     &lt;
                 </button>
 
                 <div className="carouselImages">
-                    {selectedCategory ? (
-                        // Affiche les images de la catégorie sélectionnée
+                    {products.length > 0 && currentImage ? (
                         <img
-                            alt={categories.find(cat => cat.id === selectedCategory)?.name}
+                            src={currentImage}
+                            alt={currentProduct?.name}
                             className="carouselImage"
                         />
                     ) : (
-                        // Affiche toutes les images si aucune catégorie n'est sélectionnée
-                        categories.map((category) => (
-                            <img
-                                key={category.id}
-                                alt={category.name}
-                                className="carouselImage"
-                            />
-                        ))
+                        console.log(currentProduct),
+                        <div className="noProducts">Aucun produit disponible</div>
                     )}
                 </div>
 
-                <button className="carouselArrow right" onClick={() => { /* Logique pour image suivante */ }}>
+                <button className="carouselArrow right" onClick={nextImage}>
                     &gt;
                 </button>
             </div>
