@@ -10,7 +10,7 @@ export interface User {
     emailAddress: string;
     username: string;
     password: string; // À ne pas stocker en front, utilisé uniquement pour la connexion
-    tabRoles: Role[];
+    Roles: Role[];
 }
 
 export interface AuthResponse {

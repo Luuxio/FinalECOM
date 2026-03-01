@@ -20,11 +20,11 @@ export default function RoleRoute({
         return <Navigate to={redirectTo} replace />;
     }
 
-    const role = user.tabRoles?.[0]?.name;
+    const role = user.Roles?.[0]?.name;
 
     if (!allowedRoles.includes(role))
     {
-        return <Navigate to="/non-autorise" replace />;
+        return <Navigate to="/" replace />;
     }
 
     return <Outlet />;

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "../themes/GalleryPage.css";
+import "../themes/HomePage.css";
 
 // Importe les images locales
 import image1 from "../utils/img/1.jpg";

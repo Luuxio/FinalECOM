@@ -1,34 +1,67 @@
-import { useLocation } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
+import { useState } from "react";
+import { useCategories } from "../hooks/useCategories";
+import "../themes/GalleryPage.css";
 
 export default function Gallery()
 {
-    const { user } = useAuth();
-    const location = useLocation();
-    const isNewUser = location.state?.isNewUser || true;
+    const { categories, loading, error } = useCategories();
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-    // Détermine le nom à afficher
-    let displayName = "User";
-    if (user)
-    {
-        // Utilise firstName + lastName si disponibles, sinon username, sinon emailAddress
-        displayName =
-            user.firstName && user.lastName
-                ? `${user.firstName} ${user.lastName}`
-                : user.firstName ||
-                  user.lastName ||
-                  user.username ||
-                  user.emailAddress;
-    }
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
-        <div>
-            <h1>
-                {isNewUser
-                    ? `Welcome, ${displayName} !`
-                    : `Welcome back, ${displayName} !`}
-            </h1>
-            {/* Le reste de ta page */}
+        <div className="galleryContainer">
+            <div
+                className="galleryHeader"
+                style={{ backgroundImage: "url('../utils/img/waterfall.jpg')" }}
+            >
+                <h1>Gallery</h1>
+                <p>Explore le monde :</p>
+
+                {/* Catégories comme boutons */}
+                <div className="categoryButtons">
+                    {categories.map((category) => (
+                        <button
+                            key={category.id}
+                            className={`categoryButton ${selectedCategory === category.id ? "active" : ""}`}
+                            onClick={() => setSelectedCategory(category.id)}
+                        >
+                            {category.name}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {/* Carousel d'images */}
+            <div className="imageCarousel">
+                <button className="carouselArrow left" onClick={() => { /* Logique pour image précédente */ }}>
+                    &lt;
+                </button>
+
+                <div className="carouselImages">
+                    {selectedCategory ? (
+                        // Affiche les images de la catégorie sélectionnée
+                        <img
+                            alt={categories.find(cat => cat.id === selectedCategory)?.name}
+                            className="carouselImage"
+                        />
+                    ) : (
+                        // Affiche toutes les images si aucune catégorie n'est sélectionnée
+                        categories.map((category) => (
+                            <img
+                                key={category.id}
+                                alt={category.name}
+                                className="carouselImage"
+                            />
+                        ))
+                    )}
+                </div>
+
+                <button className="carouselArrow right" onClick={() => { /* Logique pour image suivante */ }}>
+                    &gt;
+                </button>
+            </div>
         </div>
     );
 }

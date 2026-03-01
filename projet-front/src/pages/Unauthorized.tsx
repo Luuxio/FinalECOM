@@ -5,9 +5,8 @@ export default function useUnauthorized()
         <div>
             <h1>Accès refusé</h1>
             <p>
-                Vous n &apos avez pas les droits nécessaires pour accéder à cette
-                page. Si vous pensez que c&apos est une erreur, contactez
-                <br>vayriot.bastien@gmail.com</br>
+                Vous navez pas les droits nécessaires pour accéder à cette
+                page. Si vous pensez que cest une erreur, contactez vayriot.bastien@gmail.com
             </p>
         </div>
     );

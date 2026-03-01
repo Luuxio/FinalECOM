@@ -3,6 +3,7 @@ import { router } from "./router";
 import { AuthProvider } from "./context/AuthProvider";
 import { CartProvider } from "./context/CartProvider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { CategoryProvider } from "./context/CategoryProvider";
 
 const queryClient = new QueryClient();
 
@@ -12,7 +13,9 @@ export default function app()
         <QueryClientProvider client={queryClient}>
             <AuthProvider>
                 <CartProvider>
-                    <RouterProvider router={router} />
+                    <CategoryProvider>
+                        <RouterProvider router={router} />
+                    </CategoryProvider>
                 </CartProvider>
             </AuthProvider>
         </QueryClientProvider>
