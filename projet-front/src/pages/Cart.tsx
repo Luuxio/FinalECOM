@@ -1,23 +1,23 @@
-import { useCart } from "../hooks/useCart";
+import { Box, Heading, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { getProductById } from "../services/productService";
-// import type { CartItem } from "../types/cart";
+// import "../../themes/CartPage.css";
+import { useCart } from "../hooks/useCart";
+import EmptyCart from "../components/Cart/EmptyCart";
+import CartSummary from "../components/Cart/CartSummary";
+import CartItem from "../components/Cart/CartItem";
 import type { Product } from "../types/product";
-import "../themes/CartPage.css"
+import { getProductById } from "../services/productService";
 
-export default function Cart()
+export default function CartContainer()
 {
     const { cart, removeFromCart, clearCart } = useCart();
 
-    // Récupère les détails des produits dans le panier
     const productIds = cart.map((item) => item.productId);
 
     const { data: products = [] } = useQuery<Product[]>({
         queryKey: ["products", productIds],
         queryFn: async () =>
         {
-            // Récupère tous les produits en une seule requête si possible
-            // ou fait des requêtes individuelles avec gestion d'erreur
             try
             {
                 const productPromises = productIds.map((id) => getProductById(id.toString()));
@@ -29,20 +29,15 @@ export default function Cart()
                 return [];
             }
         },
-        enabled: productIds.length > 0, // Ne pas exécuter si le panier est vide
+        enabled: productIds.length > 0,
     });
 
-    // Calcul du total avec vérification de sécurité
-    const total = products.reduce(
-        (sum, product, index) =>
-        {
-            const cartItem = cart[index];
-            return sum + (product?.price || 0) * (cartItem?.quantity || 0);
-        },
-        0,
-    );
+    const total = products.reduce((sum, product, index) =>
+    {
+        const cartItem = cart[index];
+        return sum + (product?.price || 0) * (cartItem?.quantity || 0);
+    }, 0);
 
-    // Fonction pour gérer la suppression d'un produit
     const handleRemoveFromCart = (productId: string) =>
     {
         try
@@ -56,74 +51,30 @@ export default function Cart()
     };
 
     return (
-        <div className="cartContainer">
-            <h1>Mon Panier</h1>
-
+        <Box maxW="1200px" mx="auto" p={5} fontFamily="body">
+            <Heading as="h1" mb={6} fontFamily="heading">Mon Panier</Heading>
             {cart.length === 0 ? (
-                <div className="emptyCart">
-                    <p>Votre panier est vide.</p>
-                </div>
+                <EmptyCart />
             ) : (
-                <>
-                    <div className="cartItems">
+                <VStack gap={6} align="stretch">
+                    <Box>
                         {products.map((product, index) =>
                         {
                             const cartItem = cart[index];
                             if (!product || !cartItem) return null;
-
                             return (
-                                <div key={`${product.id}-${cartItem.quantity}`} className="cartItem">
-                                    <div className="productInfo">
-                                        <h3 className="productName">{product.name}</h3>
-                                        {product.Images && product.Images.length > 0 && (
-                                            <img
-                                                src={product.Images[0].link}
-                                                alt={product.name}
-                                                className="productImage"
-                                            />
-                                        )}
-                                    </div>
-                                    <div className="productDetails">
-                                        <p className="productPrice">
-                                            Prix unitaire: {product.price.toFixed(2)} €
-                                        </p>
-                                        <p className="productQuantity">
-                                            Quantité: {cartItem.quantity}
-                                        </p>
-                                        <p className="productSubtotal">
-                                            Sous-total: {(product.price * cartItem.quantity).toFixed(2)} €
-                                        </p>
-                                    </div>
-                                    <button
-                                        className="removeButton"
-                                        onClick={() => handleRemoveFromCart(product.id.toString())}
-                                        aria-label={`Retirer ${product.name} du panier`}
-                                    >
-                                        Retirer
-                                    </button>
-                                </div>
+                                <CartItem
+                                    key={`${product.id}-${cartItem.quantity}`}
+                                    product={product}
+                                    quantity={cartItem.quantity}
+                                    onRemove={() => handleRemoveFromCart(product.id.toString())}
+                                />
                             );
                         })}
-                    </div>
-
-                    <div className="cartSummary">
-                        <div className="totalAmount">
-                            <p>Total: {total.toFixed(2)} €</p>
-                        </div>
-                        <div className="cartActions">
-                            <button
-                                className="clearCartButton"
-                                onClick={clearCart}
-                            >
-                                Vider le panier
-                            </button>
-                            <button className="checkoutButton">
-                                Passer à la caisse
-                            </button>
-                        </div>
-                    </div>
-                </>
+                    </Box>
+                    <CartSummary total={total} onClearCart={clearCart} />
+                </VStack>
             )}
-        </div>
+        </Box>
     );
 }
