@@ -5,7 +5,7 @@
 // export default function Cart()
 // {
 //     const { cart, removeFromCart, clearCart } = useCart();
-
+//! Problème sur cette page à régler de toute urgence
 //     // Récupère les détails des produits dans le panier
 //     const productIds = cart.map((item) => item.productId);
 //     const { data: products = [] } = useQuery({
@@ -28,7 +28,7 @@
 //                     <ul>
 //                         {products.map((product, index) => (
 //                             <li key={product.id}>
-//                                 <h3>{product.title}</h3>
+//                                 <h3>{product.}</h3>
 //                                 <p>Prix: {product.price} €</p>
 //                                 <p>Quantité: {cart[index].quantity}</p>
 //                                 <button

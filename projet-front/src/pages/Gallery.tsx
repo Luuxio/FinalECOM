@@ -1,14 +1,22 @@
 import { useState } from "react";
 import { useProducts } from "../hooks/useProducts";
+import { useNavigate } from "react-router-dom";
 import "../themes/GalleryPage.css";
 
 export default function Gallery()
 {
     const { products, loading, error } = useProducts();
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const navigate = useNavigate();
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>Error: {error}</div>;
+
+    // Fonction pour naviguer vers la page produit
+    const goToProductPage = (productId: number) =>
+    {
+        navigate(`/product/${productId}`); // Navigation vers la page produit
+    };
 
     // Fonction pour passer à l'image suivante
     const nextImage = () =>
@@ -46,13 +54,19 @@ export default function Gallery()
 
                 <div className="carouselImages">
                     {products.length > 0 && currentImage ? (
-                        <img
-                            src={currentImage}
-                            alt={currentProduct?.name}
-                            className="carouselImage"
-                        />
+                        <button
+                            className="imageButton"
+                            onClick={() => currentProduct && goToProductPage(currentProduct.id)}
+                            aria-label={`Voir les détails de ${currentProduct?.name}`}
+                        >
+                            <img
+                                src={currentImage}
+                                alt={currentProduct?.name}
+                                className="carouselImage"
+                            />
+                        </button>
                     ) : (
-                        console.log(currentProduct),
+                        // console.log(currentProduct),
                         <div className="noProducts">Aucun produit disponible</div>
                     )}
                 </div>

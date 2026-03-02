@@ -97,3 +97,33 @@
     color: #666;
     font-size: 1.2rem;
 }
+
+.imageButton {
+  border: none;
+  background: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+  display: block;
+  width: 70%;
+  height: 70%;
+  text-align: left;
+}
+
+.imageButton:focus {
+  outline: 2px solid #2a9d8f;
+  outline-offset: 2px;
+}
+
+.imageButton:focus:not(:focus-visible) {
+  outline: none;
+}
+
+.carouselImage {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}

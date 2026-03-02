@@ -11,14 +11,14 @@ export default function Layout()
             {/* Barre de navigation */}
             <nav className="custom-navbar">
                 <div className="nav-left">
+                    <Link to="/lobby" className="nav-link">
+                        Profile
+                    </Link>
                     <Link to="/gallery" className="nav-link">
                         Gallery
                     </Link>
-                    <Link to="/artists" className="nav-link">
-                        Artist
-                    </Link>
-                    <Link to="/top" className="nav-link">
-                        Top
+                    <Link to="/cart" className="nav-link">
+                        Cart
                     </Link>
                 </div>
                 <div className="nav-right">
