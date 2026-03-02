@@ -24,7 +24,7 @@ export default function RoleRoute({
 
     if (!allowedRoles.includes(role))
     {
-        return <Navigate to="/" replace />;
+        return <Navigate to="/login" replace />;
     }
 
     return <Outlet />;

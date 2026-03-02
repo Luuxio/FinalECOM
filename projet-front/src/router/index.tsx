@@ -2,7 +2,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Layout from "../components/Layout";
 import Home from "../pages/Home";
-// import Cart from "../pages/Cart";
+import Cart from "../pages/Cart";
 import Login from "../pages/Login";
 import RoleRoute from "./RoleRoute";
 // import Unauthorized from "../pages/Unauthorized";
@@ -30,7 +30,7 @@ export const router = createBrowserRouter([
                     { path: "/product/:id", element: <ProductPage/>},
                     { path: "/gallery", element: <Gallery /> },
                     { path: "/lobby", element: <Lobby /> },
-                    // { path: "/cart", element: <Cart /> },
+                    { path: "/cart", element: <Cart /> },
                 ],
             },
         ],
