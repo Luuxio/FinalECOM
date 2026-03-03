@@ -9,6 +9,7 @@ import RoleRoute from "./RoleRoute";
 import Lobby from "../pages/Lobby";
 import Gallery from "../pages/Gallery";
 import ProductPage from "../pages/Product";
+import Register from "../pages/Register";
 
 export const router = createBrowserRouter([
     {
@@ -16,6 +17,9 @@ export const router = createBrowserRouter([
         children: [
             { path: "/", element: <Home /> },
             { path: "/login", element: <Login /> },
+            { path: "/signin", element: <Register />},
+            { path: "/gallery", element: <Gallery /> },
+            { path: "/product/:id", element: <ProductPage/>},
             // { path: "/non-autorise", element: <Unauthorized /> },
             {
                 // Routes seulement pour admin
@@ -27,8 +31,6 @@ export const router = createBrowserRouter([
                 //Routes seulement pour user authentifié et admin
                 element: <RoleRoute allowedRoles={["user", "admin"]} />,
                 children: [
-                    { path: "/product/:id", element: <ProductPage/>},
-                    { path: "/gallery", element: <Gallery /> },
                     { path: "/lobby", element: <Lobby /> },
                     { path: "/cart", element: <Cart /> },
                 ],

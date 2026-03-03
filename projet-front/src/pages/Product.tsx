@@ -1,40 +1,145 @@
-import { Box } from "@chakra-ui/react";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import waterfallImage from "../utils/img/waterfall.jpg";
-import ContentSection from "../components/Home/ContentSection";
-
+// src/components/product/ProductContainer.tsx
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import { useProducts } from "../hooks/useProducts";
-import ImageCarousel from "../components/Gallery/ImageCarousel";
+import { useCart } from "../hooks/useCart";
+import { Box, Spinner, Text, VStack, Flex } from "@chakra-ui/react";
+import ProductHeader from "../components/Product/ProductHeader";
+import ProductDescription from "../components/Product/ProductDescription";
+import AddToCartButton from "../components/Product/AddToCartButton";
+import QuantitySelector from "../components/Product/QuantitySelector";
+import type { Product } from "../types/product";
 
-export default function HomeContainer()
+export default function ProductContainer()
 {
-    const { products } = useProducts();
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const navigate = useNavigate();
+    const { id } = useParams<{ id: string }>();
+    const { fetchProductById } = useProducts();
+    const { addToCart } = useCart();
+    const [product, setProduct] = useState<Product | null>(null);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [error, setError] = useState<string | null>(null);
+    const [quantity, setQuantity] = useState<number>(1);
+    const [isAdded, setIsAdded] = useState<boolean>(false);
 
-    const nextImage = () =>
-        setCurrentImageIndex((prev) => (prev === products.length - 1 ? 0 : prev + 1));
+    useEffect(() =>
+    {
+        const loadProduct = async () =>
+        {
+            if (!id) return;
 
-    const prevImage = () =>
-        setCurrentImageIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
+            try
+            {
+                setLoading(true);
+                const productData = await fetchProductById(id);
+                if (productData)
+                {
+                    setProduct(productData);
+                }
+            }
+            catch (err)
+            {
+                setError(err instanceof Error ? err.message : "Failed to load product");
+            }
+            finally
+            {
+                setLoading(false);
+            }
+        };
 
-    const goToProductPage = (productId: number) =>
-        navigate(`/product/${productId}`);
+        loadProduct();
+    }, [id, fetchProductById]);
 
-    const currentProduct = products[currentImageIndex];
-    const currentImage = currentProduct?.Images?.[0]?.link;
+    const handleAddToCart = () =>
+    {
+        if (!product) return;
+
+        addToCart(product.id.toString(), quantity);
+        setIsAdded(true);
+        setTimeout(() => setIsAdded(false), 2000);
+    };
+
+    if (loading)
+    {
+        return (
+            <Box display="flex" justifyContent="center" alignItems="center" minHeight="50vh">
+                <Spinner size="xl" />
+            </Box>
+        );
+    }
+
+    if (error)
+    {
+        return (
+            <Box textAlign="center" py={10}>
+                <Text color="red.500" fontSize="xl">{error}</Text>
+            </Box>
+        );
+    }
+
+    if (!product)
+    {
+        return (
+            <Box textAlign="center" py={10}>
+                <Text fontSize="xl">Product not found</Text>
+            </Box>
+        );
+    }
 
     return (
-        <Box maxW="100%" mx="auto" p={0}>
-            <ImageCarousel
-                currentImage={currentImage}
-                currentProduct={currentProduct}
-                nextImage={nextImage}
-                prevImage={prevImage}
-                goToProductPage={goToProductPage}
-            />
-            <ContentSection waterfallImage={waterfallImage} />
+        <Box maxW="1200px" mx="auto" p={5}>
+            <Flex
+                direction={{ base: "column", md: "row" }}
+                gap={8}
+                alignItems="flex-start"
+            >
+                {/* Section gauche - Image du produit */}
+                <Box flex={1} minW="300px">
+                    <Box
+                        borderRadius="lg"
+                        overflow="hidden"
+                        boxShadow="lg"
+                        bg="white"
+                        position="relative"
+                    >
+                        <Box
+                            bg="gray.100"
+                            height="400px"
+                            display="flex"
+                            alignItems="center"
+                            justifyContent="center"
+                        >
+                            <Text fontSize="xl" color="gray.500">
+                Image du produit
+                            </Text>
+                            {/* Ici tu pourrais ajouter ton composant d'image si tu en as un */}
+                        </Box>
+                    </Box>
+                </Box>
+
+                {/* Section droite - Détails du produit */}
+                <Box flex={1}>
+                    <VStack align="stretch" gap={6}>
+                        {/* En-tête du produit */}
+                        <ProductHeader product={product} />
+
+                        {/* Description du produit */}
+                        <ProductDescription description={product.description} />
+
+                        {/* Sélecteur de quantité */}
+                        <QuantitySelector
+                            quantity={quantity}
+                            setQuantity={setQuantity}
+                        />
+
+                        {/* Bouton Ajouter au panier */}
+                        <AddToCartButton
+                            quantity={quantity}
+                            isAdded={isAdded}
+                            onAdd={handleAddToCart}
+                        />
+                    </VStack>
+                </Box>
+            </Flex>
         </Box>
     );
 }

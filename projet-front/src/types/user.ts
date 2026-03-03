@@ -14,6 +14,6 @@ export interface User {
 }
 
 export interface AuthResponse {
-    token: string;
-    user: Omit<User, "password">;
+  token: string;
+  user: Omit<User, "password">;
 }

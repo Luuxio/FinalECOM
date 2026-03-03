@@ -51,3 +51,18 @@ export function AuthProvider({ children }: { children: ReactNode })
         </AUTHCONTEXT.Provider>
     );
 }
+
+//   const handleSubmit = async (e: React.FormEvent) => {
+//     e.preventDefault();
+//     setError(null);
+//     setIsSubmitting(true);
+//     try {
+//       await signUp({ firstName, lastName, email, password });
+//       navigate("/lobby", { state: { isNewUser: true } });
+//     } catch (err) {
+//       setError("Échec de l'inscription. Vérifie tes informations.");
+//       console.error("SignIn error:", err);
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
