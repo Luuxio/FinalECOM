@@ -1,9 +1,9 @@
 import { api } from "./api"
 import type { Product } from "../types/product"
 
-export const getProducts = async (): Promise<Product[]> =>
+export const getProducts = async (signal?: AbortSignal): Promise<Product[]> =>
 {
-    const response = await api.get("/products")
+    const response = await api.get("/products", { signal })
     return response.data
 }
 
