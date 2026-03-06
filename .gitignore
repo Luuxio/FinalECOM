@@ -1,5 +1,13 @@
 **/node_modules
-test/
-**/test
+# test/
+# **/test
 **/*/readme.md
 **/*/package-lock.json
+test/
+
+# Playwright
+**/test-results/
+**/playwright-report/
+**/blob-report/
+**/playwright/.cache/
+**/playwright/.auth/

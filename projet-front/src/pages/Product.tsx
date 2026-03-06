@@ -111,7 +111,6 @@ export default function ProductContainer()
                             <Text fontSize="xl" color="gray.500">
                 Image du produit
                             </Text>
-                            {/* Ici tu pourrais ajouter ton composant d'image si tu en as un */}
                         </Box>
                     </Box>
                 </Box>

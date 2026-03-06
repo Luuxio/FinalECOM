@@ -54,6 +54,7 @@ export default function Login()
                         <Box w="100%">
                             <Text mb={1} fontSize="sm" fontWeight="medium">Email</Text>
                             <Input
+                                id="email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
@@ -67,6 +68,7 @@ export default function Login()
                         <Box w="100%">
                             <Text mb={1} fontSize="sm" fontWeight="medium">Mot de passe</Text>
                             <Input
+                                id="password"
                                 type="password"
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
